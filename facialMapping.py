@@ -3,7 +3,12 @@ import cv2
 
 cap = cv2.VideoCapture(0)
 
-haar_face_cascade = cv2.CascadeClassifier('./venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_alt.xml')
+# Mac Path
+haar_face_cascade = cv2.CascadeClassifier('./venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+
+# Ubuntu Path is different
+# haar_face_cascade = cv2.CascadeClassifier('./venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+
 
 while(True):
     # Capture frame-by-frame
