@@ -11,7 +11,7 @@ img = cv2.imread('sample.png')
 
 gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=2.0);
+faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=2.2);
 for(x,y,w,h) in faces:
 	cv2.rectangle(img,(x,y),(x+w,y+h),(225,0,0),2)
 	print(gray[y:y+h,x:x+w].shape)

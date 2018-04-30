@@ -18,7 +18,7 @@ while True:
 
 	gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
-	faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5);
+	faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=2.2);
 	for(x,y,w,h) in faces:
 		cv2.rectangle(im,(x,y),(x+w,y+h),(225,0,0),2)
 		print(gray[y:y+h,x:x+w].shape)
@@ -26,9 +26,9 @@ while True:
 		Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
 		if(conf<50):
 			if(Id==1):
-				name="Sri Teja"
+				name="Vivek"
 			elif(Id==2):
-				name="Vivek Lakshmanan"
+				name="Sri Teja"
 		else:
 			name="Unknown"
 		cv2.putText(im, name, (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
