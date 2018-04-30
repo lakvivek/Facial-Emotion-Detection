@@ -3,7 +3,9 @@ import numpy as np
 #from PIL import Image
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml");
+# detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml");
+detector= cv2.CascadeClassifier("../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml");
+
 
 def getImagesAndLabels(path):
 	#get the path of all the files in the folder
@@ -31,6 +33,8 @@ def getImagesAndLabels(path):
 	return faceSamples,Ids
 
 
-faces,Ids = getImagesAndLabels('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceDataset')
+# faces,Ids = getImagesAndLabels('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceDataset')
+faces,Ids = getImagesAndLabels('./faceDataset')
 recognizer.train(faces, np.array(Ids))
-recognizer.save('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceTrainer/faceTrainer.yml')
+# recognizer.save('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceTrainer/faceTrainer.yml')
+recognizer.save('./faceTrainer/faceTrainer.yml')

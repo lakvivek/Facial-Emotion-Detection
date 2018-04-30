@@ -1,6 +1,8 @@
 import cv2
 cam = cv2.VideoCapture(0)
-detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+# detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+
 
 Id=input('enter your id:')
 sampleNum=0
@@ -14,7 +16,9 @@ while(True):
         #incrementing sample number 
         sampleNum=sampleNum+1
         #saving the captured face in the dataset folder
-        cv2.imwrite("/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceDataset/User."+Id +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
+        # cv2.imwrite("/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceDataset/User."+Id +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
+        cv2.imwrite("./faceDataset/User."+Id +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
+
         print("Added: ",Id+"."+str(sampleNum))
         cv2.imshow('frame',img)
     #wait for 100 miliseconds 
