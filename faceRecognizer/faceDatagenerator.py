@@ -1,12 +1,10 @@
 import cv2
 import sqlite3
-import os
-import numpy as np
 
 
 cam = cv2.VideoCapture(0)
-detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-#detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+# detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 
 
 def insertOrUpdate(name):
@@ -20,7 +18,8 @@ def insertOrUpdate(name):
 	#if(isRecordExist ==1):
 	#	cmd = "update knownPeople set name ="+str(name)+" where ID="+str(Id)
 	#else:
-	cmd = "insert into knownPeople(Name) values("+str(name)+")"
+	cmd = "INSERT INTO knownPeople(Name) VALUES('" + str(name) + "');"
+	print(cmd)
 	c.execute(cmd)
 
 	Id=c.lastrowid
@@ -57,52 +56,11 @@ while(True):
     if cv2.waitKey(100) & 0xFF == ord('q'):
         break
     # break if the sample number is morethan 50
-    elif sampleNum>50:
+    elif sampleNum>20:
         break
 
 cam.release()
 cv2.destroyAllWindows()
 
-
-
-recognizer = cv2.face.LBPHFaceRecognizer_create()
-detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml");
-#detector= cv2.CascadeClassifier("../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml");
-
-
-def getImagesAndLabels(path):
-	#get the path of all the files in the folder
-	imagePaths=[os.path.join(path,f) for f in os.listdir(path)] 
-	#create empth face list
-	faceSamples=[]
-	#create empty ID list
-	Ids=[]
-	#now looping through all the image paths and loading the Ids and the images
-	for imagePath in imagePaths:
-		#loading the image and converting it to gray scale
-		#image = #Image.open(imagePath).convert('L')
-		image= cv2.imread(imagePath)
-		pilImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-		#Now we are converting the PIL image into numpy array
-		imageNp=np.array(pilImage,'uint8')
-		#getting the Id from the image
-		Id=int(os.path.split(imagePath)[-1].split(".")[1])
-		#print(Id)
-		# extract the face from the training image sample
-		faces=detector.detectMultiScale(imageNp)
-		#If a face is there then append that in the list as well as Id of it
-		for (x,y,w,h) in faces:
-			faceSamples.append(imageNp[y:y+h,x:x+w])
-			Ids.append(Id)
-	#print(Ids)
-	return faceSamples,Ids
-
-
-faces,Ids = getImagesAndLabels('./faceDataset')
-#print(np.array(Ids))
-#faces,Ids = getImagesAndLabels('./faceDataset')
-recognizer.train(faces, np.array(Ids))
-recognizer.save('./faceTrainer/faceTrainer.yml')
-#recognizer.save('./faceTrainer/faceTrainer.yml')
 
 
