@@ -1,4 +1,6 @@
 /venv/**
-/data/emotionRecognizerData/
-/data/faceRecognizerData/
-/faceRecognizerModule/faceDataset/
+/data/emotionRecognizerData/*
+/data/faceRecognizerData/*
+/faceRecognizerModule/faceDataset/*
+!/data/emotionRecognizerData/Readme.md
+!/data/faceRecognizerData/Readme.md
