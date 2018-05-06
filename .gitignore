@@ -1,2 +1,5 @@
 /venv/**
-/data/**
+/data/emotionRecognizerData/**
+/data/faceRecognizerData/**
+/faceRecognizerModule/faceDataset/**
+
