@@ -45,6 +45,7 @@ def detectEmotion(filename):
 	    	pred = predict_model(W_Rs, B_Rs, arr)
 	    	print("prediction is %s "%pred)
 	    	print(datetime.now() - start)
+	    	return pred
 	    else:
         	print("Image size is small")
 
@@ -55,6 +56,8 @@ def detectEmotion(filename):
 	cv2.destroyAllWindows()
 
 
-if __name__ == '__main__':
-	detectEmotion('../../data/emotionRecognizerData/test2.png')
+# if __name__ == '__main__':
+# # 	detectEmotion('../../data/emotionRecognizerData/test2.png')
+# 	pred = detectEmotion('./static/emotion.jpg')
+# 	print("pred value is ", pred)
 

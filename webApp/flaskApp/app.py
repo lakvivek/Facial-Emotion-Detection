@@ -1,8 +1,10 @@
 #!/usr/bin/env python
-from flask import Flask, render_template, Response
+from flask import Flask, render_template, Response, request
 import cv2
 import sqlite3
-from faceRecognizer import *
+import os
+from predict import *
+
 app = Flask(__name__)
 
 
@@ -11,7 +13,6 @@ recognizer = cv2.face.LBPHFaceRecognizer_create()
 recognizer.read('../../data/faceRecognizerData/faceTrainer/faceTrainer.yml')
 # haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 haar_face_cascade = cv2.CascadeClassifier('../../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-
 cam = cv2.VideoCapture(0)
 
 def getProfile(id):
@@ -25,10 +26,10 @@ def getProfile(id):
     con.close()
     return profile
 
-def gen():
+def faceGen():
     while True:
+
         ret, im =cam.read()
-        #print
 
         gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
@@ -45,19 +46,33 @@ def gen():
                     cv2.putText(im, str(profile[1]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
                 else:
                     cv2.putText(im, "Unknown", (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
-        cv2.imwrite('face.jpg',im)
+    
+        cv2.imwrite('face.jpg', im)
         yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + open('face.jpg', 'rb').read() + b'\r\n')
 
-@app.route('/face')
+@app.route('/face', methods=['GET', 'POST'])
 def index():
-    return render_template('faceRecog.html')
+    if request.method == 'POST':
+        ret, im =cam.read()
+        cv2.imwrite('./static/emotion.jpg', im)
+        cv2.destroyAllWindows()
+        return render_template('emotionRecog.html')
+    else:
+        return render_template('faceRecog.html')
+
+
+@app.route('/emotion')
+def emotion():
+    pred = detectEmotion('./static/emotion.jpg')
+    return render_template('predict.html', output=pred)
+
 
 
 
 @app.route('/video_feed')
 def video_feed():
-    return Response(gen(),
+    return Response(faceGen(),
                     mimetype='multipart/x-mixed-replace; boundary=frame')
 
 
