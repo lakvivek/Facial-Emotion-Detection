@@ -3,12 +3,12 @@ import sqlite3
 
 
 cam = cv2.VideoCapture(0)
-# detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+#detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 
 
 def insertOrUpdate(name):
-	con = sqlite3.connect("faceDatabase.db")
+	con = sqlite3.connect("../data/faceRecognizerData/faceDatabase.db")
 	c= con.cursor()
 	#cmd="SELECT ID,name FROM knownPeople where ID="+str(Id)
 	#cursor = con.execute(cmd)
@@ -19,7 +19,7 @@ def insertOrUpdate(name):
 	#	cmd = "update knownPeople set name ="+str(name)+" where ID="+str(Id)
 	#else:
 	cmd = "INSERT INTO knownPeople(Name) VALUES('" + str(name) + "');"
-	print(cmd)
+	#print(cmd)
 	c.execute(cmd)
 
 	Id=c.lastrowid
@@ -31,11 +31,11 @@ def insertOrUpdate(name):
 
 
 #Id=input('Enter ID:')
-print("Enter name with \"\" ")
+#print("Enter name with \"\" ")
 name=input('Enter your name:')
 
 Id = insertOrUpdate(name)
-
+print("PLEASE BE PATIENT UNTIL SYSTEM CAPTURES YOUR FACE IMAGE")
 sampleNum=0
 while(True):
     ret, img = cam.read()
@@ -47,16 +47,16 @@ while(True):
         #incrementing sample number 
         sampleNum=sampleNum+1
         #saving the captured face in the dataset folder
-        cv2.imwrite("./faceDataset/User."+str(Id) +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
+        cv2.imwrite("../data/faceRecognizerData/faceDataset/User."+str(Id) +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
         #cv2.imwrite("./faceDataset/User."+ str(Id) +'.'+ str(sampleNum) + ".jpg", img[y:y+h,x:x+w])
 
-        print("Added: ",str(Id)+"."+str(sampleNum))
+        #print("Added training pic: ",sampleNum)
         cv2.imshow('frame',img)
     #wait for 100 miliseconds 
     if cv2.waitKey(100) & 0xFF == ord('q'):
         break
     # break if the sample number is morethan 50
-    elif sampleNum>20:
+    elif sampleNum>50:
         break
 
 cam.release()

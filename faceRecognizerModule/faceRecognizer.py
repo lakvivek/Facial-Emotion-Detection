@@ -3,19 +3,19 @@ import numpy as np
 import sqlite3
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read('./faceTrainer/faceTrainer.yml')
+recognizer.read('../data/faceRecognizerData/faceTrainer/faceTrainer.yml')
 #recognizer.read('./faceTrainer/faceTrainer.yml')
-#haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+#haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 
 def getProfile(id):
-	con = sqlite3.connect("faceDatabase.db")
+	con = sqlite3.connect("../data/faceRecognizerData/faceDatabase.db")
 	cmd = "select * from knownPeople where ID = "+str(id)
 	cursor = con.execute(cmd)
 	profile = None
 	for row in cursor:
 		profile = row
-		print(profile)
+		#print(profile)
 	con.close()
 	return profile
 
@@ -25,7 +25,7 @@ cam = cv2.VideoCapture(0)
 
 while True:
 	ret, im =cam.read()
-	print
+	#print
 
 	gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
 
@@ -35,8 +35,8 @@ while True:
 		#print(gray[y:y+h,x:x+w].shape)
 		#print(gray[y:y+h,x:x+w])
 		Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
-		print("Id=",Id)
-		print("Conf=", conf)
+		#print("Id=",Id)
+		#print("Conf=", conf)
 		cnf = int(conf)
 		profile = getProfile(Id)
 		if(profile != None and cnf<45.00):

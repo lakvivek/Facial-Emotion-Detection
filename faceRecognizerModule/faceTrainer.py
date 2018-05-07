@@ -3,8 +3,8 @@ import numpy as np
 #from PIL import Image
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-#detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml");
-detector= cv2.CascadeClassifier("../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml");
+detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml");
+#detector= cv2.CascadeClassifier("../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml");
 
 
 def getImagesAndLabels(path):
@@ -35,9 +35,9 @@ def getImagesAndLabels(path):
 	return faceSamples,Ids
 
 
-faces,Ids = getImagesAndLabels('./faceDataset')
+faces,Ids = getImagesAndLabels('../data/faceRecognizerData/faceDataset')
 #print(np.array(Ids))
 #faces,Ids = getImagesAndLabels('./faceDataset')
 recognizer.train(faces, np.array(Ids))
-recognizer.save('./faceTrainer/faceTrainer.yml')
+recognizer.save('../data/faceRecognizerData/faceTrainer/faceTrainer.yml')
 #recognizer.save('./faceTrainer/faceTrainer.yml')

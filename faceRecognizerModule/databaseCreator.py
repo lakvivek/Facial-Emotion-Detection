@@ -1,7 +1,7 @@
 import sqlite3
 
 
-con = sqlite3.connect("faceDatabase.db")
+con = sqlite3.connect("../data/faceRecognizerData/faceDatabase.db")
 
 c=con.cursor()
 
