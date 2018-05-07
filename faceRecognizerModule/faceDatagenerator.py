@@ -3,8 +3,8 @@ import sqlite3
 
 
 cam = cv2.VideoCapture(0)
-detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-#detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+# detector=cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+detector=cv2.CascadeClassifier('../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
 
 
 def insertOrUpdate(name):
@@ -40,7 +40,7 @@ sampleNum=0
 while(True):
     ret, img = cam.read()
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = detector.detectMultiScale(gray,  scaleFactor=2.2, minNeighbors=5);
+    faces = detector.detectMultiScale(gray,  scaleFactor=1.2);
     for (x,y,w,h) in faces:
         cv2.rectangle(img,(x,y),(x+w,y+h),(255,0,0),2)
         
