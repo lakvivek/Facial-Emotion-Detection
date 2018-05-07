@@ -1,5 +1,6 @@
 import cv2,os
 import numpy as np
+import glob
 #from PIL import Image
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -9,7 +10,17 @@ detector= cv2.CascadeClassifier("../venv/lib/python3.5/site-packages/cv2/data/ha
 
 def getImagesAndLabels(path):
 	#get the path of all the files in the folder
-	imagePaths=[os.path.join(path,f) for f in os.listdir(path)] 
+	#print(path)
+	#print(glob.glob('path/?.jpg'))
+	files = os.listdir(path)
+	#print(files)
+	#if files[1].endswith('.jpg'):
+	#	print("JPG FILES=",files[1])
+	#imagepaths=[]
+	#for f in files:
+	#	if f.endswith('.jpg'):
+	imagePaths=[os.path.join(path,f) for f in files if f.endswith('.jpg')]
+	#print(imagePaths)
 	#create empth face list
 	faceSamples=[]
 	#create empty ID list
@@ -35,7 +46,7 @@ def getImagesAndLabels(path):
 	return faceSamples,Ids
 
 
-faces,Ids = getImagesAndLabels('../data/faceRecognizerData/faceDataset')
+faces,Ids = getImagesAndLabels('../data/faceRecognizerData/faceDataset/')
 #print(np.array(Ids))
 #faces,Ids = getImagesAndLabels('./faceDataset')
 recognizer.train(faces, np.array(Ids))
