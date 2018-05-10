@@ -40,7 +40,7 @@ def play_music(detection, volume=0.8):
 
     if detection =="sad":
         print("The person is not happy")
-        song = random.randint(1,2)
+        song = random.randint(1,10)
         try:
             print("../data/musicFiles/happyFiles/{}.mp3".format(song))
             pg.mixer.music.load("../../data/musicFiles/happyFiles/{}.mp3".format(song))
@@ -50,7 +50,7 @@ def play_music(detection, volume=0.8):
             return
     elif (detection == "happy"):
         print("The person is happy or neutral")
-        song = random.randint(1,3)
+        song = random.randint(1,10)
         try:
             print("../data/musicFiles/neutralFiles/{}.mp3".format(song))
             pg.mixer.music.load("../../data/musicFiles/neutralFiles/{}.mp3".format(song))
@@ -58,15 +58,15 @@ def play_music(detection, volume=0.8):
         except pg.error:
             print("File not found! ({})".format( pg.get_error()))
             return
-       
 
-    
+
+
     clock = pg.time.Clock()
     # clock
     start_ticks = pg.time.get_ticks()
-        
+
     pg.mixer.music.play()
-    
+
     seconds = 0
     while pg.mixer.music.get_busy():
         seconds = (pg.time.get_ticks() - start_ticks) / 1000  # calculate how many seconds
@@ -98,7 +98,7 @@ def faceGen():
                     cv2.putText(im, "Unknown", (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
             else:
                 cv2.putText(im, "Unknown", (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
-    
+
         cv2.imwrite('face.jpg', im)
         yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + open('face.jpg', 'rb').read() + b'\r\n')
