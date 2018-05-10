@@ -1,10 +1,17 @@
 <html>
   <head>
+  	<meta Http-Equiv="Cache-Control" Content="no-cache">
+    <meta Http-Equiv="Pragma" Content="no-cache">
+    <meta Http-Equiv="Expires" Content="0">
+    <meta Http-Equiv="Pragma-directive: no-cache">
+    <meta Http-Equiv="Cache-directive: no-cache">
     <title>Face Recognizer Demonstration on Live Video Streaming</title>
   </head>
   <body>
     <h1>Prediction values are</h1>
     <img style="height: 60%; width:60%" src="/static/emotion.jpg">
     <h1> Prediction value is {{output}} </h1> 
+    <h2> {{detection}} </h2>
+    <a href="/play?song={{detection}}"> Play Song </a>
   </body>
 </html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Facial and Emotion Recognition using openCV, python and flask</title>
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
+    <style>
+        @import url(https://fonts.googleapis.com/css?family=Roboto:300);
+    </style>
+</head>
+<body>
+    <center>
+        <div>
+            <h1> Facial Recognizer </h1>
+            <img style="height: 60%; width:60%" src="{{ url_for('video_feed') }}">
+        </div>
+        <form method="post">
+            <button type="submit"> Take picture and predict emotion </button>
+        </form>
+    </center>
+</body>
+</html>

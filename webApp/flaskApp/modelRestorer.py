@@ -119,5 +119,8 @@ def predict_model(restored_ws, restored_bs, test_x):
         tf.global_variables_initializer().run()
         pred = tf.argmax(soft, 1)
         prediction = pred.eval({x: test_x})
+        print(prediction)
+        print(soft.eval({x: test_x}))
+        emotions_levels = soft.eval({x: test_x})
         
-    return prediction
+    return prediction, emotions_levels.tolist()

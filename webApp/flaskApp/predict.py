@@ -20,7 +20,7 @@ Ws, Bs = initialise_variables()
 W_Rs, B_Rs = restoremodel(Ws, Bs)
 
 # haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-haar_face_cascade = cv2.CascadeClassifier('../../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+haar_face_cascade = cv2.CascadeClassifier('../../data/haarcascade_frontalface_default.xml')
 
 def processInput(box):
 	box = np.asarray(box, dtype=np.float32)
@@ -43,21 +43,9 @@ def detectEmotion(filename):
 	    	start = datetime.now()
 	    	arr = processInput(gray_box)
 	    	pred = predict_model(W_Rs, B_Rs, arr)
-	    	print("prediction is %s "%pred)
+	    	# print("prediction is %s "%pred)
 	    	print(datetime.now() - start)
 	    	return pred
 	    else:
         	print("Image size is small")
-
-	cv2.imshow('dst_rt', img)
-	cv2.namedWindow('dst_rt', cv2.WINDOW_NORMAL)
-
-	cv2.waitKey(0)
-	cv2.destroyAllWindows()
-
-
-# if __name__ == '__main__':
-# # 	detectEmotion('../../data/emotionRecognizerData/test2.png')
-# 	pred = detectEmotion('./static/emotion.jpg')
-# 	print("pred value is ", pred)
 

@@ -3,16 +3,19 @@ from flask import Flask, render_template, Response, request
 import cv2
 import sqlite3
 import os
+import pygame as pg
+import random
 from predict import *
 
-app = Flask(__name__)
+
+app = Flask(__name__, static_url_path='/static')
 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 # recognizer.read('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceTrainer/faceTrainer.yml')
 recognizer.read('../../data/faceRecognizerData/faceTrainer/faceTrainer.yml')
 # haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-haar_face_cascade = cv2.CascadeClassifier('../../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+haar_face_cascade = cv2.CascadeClassifier('../../data/haarcascade_frontalface_default.xml')
 cam = cv2.VideoCapture(0)
 
 def getProfile(id):
@@ -25,6 +28,53 @@ def getProfile(id):
         #print(profile)
     con.close()
     return profile
+
+def play_music(detection, volume=0.8):
+
+    freq = 44100
+    bitsize = -16
+    channels = 2
+    buffer = 2048
+    pg.mixer.init(freq, bitsize, channels, buffer)
+    pg.mixer.music.set_volume(volume)
+
+    if detection =="sad":
+        print("The person is not happy")
+        song = random.randint(1,2)
+        try:
+            print("../data/musicFiles/happyFiles/{}.mp3".format(song))
+            pg.mixer.music.load("../../data/musicFiles/happyFiles/{}.mp3".format(song))
+            print("Music file loaded!")
+        except pg.error:
+            print("File not found! ({})".format( pg.get_error()))
+            return
+    elif (detection == "happy"):
+        print("The person is happy or neutral")
+        song = random.randint(1,3)
+        try:
+            print("../data/musicFiles/neutralFiles/{}.mp3".format(song))
+            pg.mixer.music.load("../../data/musicFiles/neutralFiles/{}.mp3".format(song))
+            print("Music file loaded")
+        except pg.error:
+            print("File not found! ({})".format( pg.get_error()))
+            return
+       
+
+    
+    clock = pg.time.Clock()
+    # clock
+    start_ticks = pg.time.get_ticks()
+        
+    pg.mixer.music.play()
+    
+    seconds = 0
+    while pg.mixer.music.get_busy():
+        seconds = (pg.time.get_ticks() - start_ticks) / 1000  # calculate how many seconds
+        clock.tick(30)
+        if seconds > 30:
+            break
+
+    #     print(seconds)
 
 def faceGen():
     while True:
@@ -46,12 +96,74 @@ def faceGen():
                     cv2.putText(im, str(profile[1]), (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
                 else:
                     cv2.putText(im, "Unknown", (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+            else:
+                cv2.putText(im, "Unknown", (x, y), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
     
         cv2.imwrite('face.jpg', im)
         yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + open('face.jpg', 'rb').read() + b'\r\n')
 
-@app.route('/face', methods=['GET', 'POST'])
+
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
+
+@app.route('/emotion')
+def emotion():
+    pred, emotions = detectEmotion('./static/emotion.jpg')
+    emotion="happy"
+    print("pred value", pred, type(pred))
+    if(pred == 0):
+        print("The emotion is neutral and the person feels normal")
+        emotion = "neutral"
+    elif( pred == 1):
+        print("The peson is angry")
+        emotion = "angry"
+    elif(pred == 2):
+        print("The person feels contempt")
+        emotion = "contempt"
+    elif(pred == 3):
+        print("The person feels disgust")
+        emotion = "disgust"
+    elif(pred == 4):
+        print("The emotion is fear and the person is afraid")
+        emotion = "afraid"
+    elif(pred == 5):
+        print("The person feels happy")
+        emotion = "happy"
+    elif(pred == 6):
+        print("The person is sad")
+        emotion = "sad"
+    elif(pred == 7):
+        print("The person is surprised")
+        emotion = "surprised"
+
+    if(pred == 1  or pred ==2 or pred == 3 or pred == 6):
+        detection = "sad"
+    else:
+        detection = "happy"
+    print("emotions", emotions)
+    print("emotion", emotion, detection)
+    return render_template('predict.html', output=pred, detection=detection)
+
+
+@app.route('/play')
+def play():
+    song = request.args.get('song')
+    play_music(song)
+    return render_template('emotionRecog.html')
+
+@app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         ret, im =cam.read()
@@ -59,15 +171,7 @@ def index():
         cv2.destroyAllWindows()
         return render_template('emotionRecog.html')
     else:
-        return render_template('faceRecog.html')
-
-
-@app.route('/emotion')
-def emotion():
-    pred = detectEmotion('./static/emotion.jpg')
-    return render_template('predict.html', output=pred)
-
-
+        return render_template('new.html')
 
 
 @app.route('/video_feed')
@@ -77,4 +181,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True, threaded=True)
+    app.run(host='0.0.0.0')

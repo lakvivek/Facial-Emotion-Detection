@@ -16,24 +16,27 @@ lables_y = np.load('../../data/emotionRecognizerData/labels.npy')
 """loading images - pixel matrices from file"""
 images = np.load('../../data/emotionRecognizerData/image_matrix.npy')
 
-images, lables_y = shuffle(images, lables_y, random_state=0)
+# images, lables_y = shuffle(images, lables_y, random_state=0)
 
 
 """splitting to train and test"""
-train_images = images[0:300]
-test_images = images[300:327]
-train_y = lables_y[0:300]
-test_y = lables_y[300: 327]
+# train_images = images[0:300]
+# test_images = images[300:327]
+# train_y = lables_y[0:300]
+# test_y = lables_y[300: 327]
+
+train_images = images
+train_y = lables_y
 
 """normalization"""
 train_x_norm = (train_images / 255)
-test_x_norm = (test_images / 255)
+# test_x_norm = (test_images / 255)
 
 
 """reshaping X to contain channels = 1"""
 #print(train_x_norm.shape)
 train_x_norm1 = train_x_norm.reshape(train_x_norm.shape[0], train_x_norm.shape[1], train_x_norm.shape[2], 1)
-test_x_norm1 = test_x_norm.reshape(test_x_norm.shape[0], test_x_norm.shape[1], test_x_norm.shape[2], 1)
+# test_x_norm1 = test_x_norm.reshape(test_x_norm.shape[0], test_x_norm.shape[1], test_x_norm.shape[2], 1)
 
 
 
@@ -45,7 +48,7 @@ def One_Hot_Encoding(arr, samples_num):
     return encode_matrix
 
 train_y_encode = One_Hot_Encoding(train_y, len(train_y))
-test_y_encode = One_Hot_Encoding(test_y, len(test_y))
+# test_y_encode = One_Hot_Encoding(test_y, len(test_y))
 
 
 
@@ -114,7 +117,8 @@ def frwd_propagation(X_input, weights, bias):
 
 
 
-def model(X_train, Y_train, X_test, Y_test, iterations = 2, learning_rate = 0.0001, minibatch_size = 15):
+# def model(X_train, Y_train, X_test, Y_test, iterations = 2, learning_rate = 0.0001, minibatch_size = 15):
+def model(X_train, Y_train, iterations = 2, learning_rate = 0.0001, minibatch_size = 15):
 
     tf.set_random_seed(1)                                                                       
     (m, n_h, n_w, n_c) = X_train.shape             
@@ -168,14 +172,14 @@ def model(X_train, Y_train, X_test, Y_test, iterations = 2, learning_rate = 0.00
         # Calculate accuracy on the TRAIN SET AND test set
         accuracy = 100 * tf.reduce_mean(tf.cast(correct_prediction, "float"))
         train_accuracy = accuracy.eval({X: X_train, Y: Y_train})
-        test_accuracy = accuracy.eval({X: X_test, Y: Y_test})
-        print("pred : %s" %predict_y.eval({X: X_test, Y: Y_test}))
+        # test_accuracy = accuracy.eval({X: X_test, Y: Y_test})
+        # print("pred : %s" %predict_y.eval({X: X_test, Y: Y_test}))
         print("Train Accuracy:", train_accuracy)
-        print("Test Accuracy:", test_accuracy)
+        # print("Test Accuracy:", test_accuracy)
         save_path = saver.save(sess, '../../data/emotionRecognizerData/my_model')
         print("Model saved in path: %s" % save_path)
         #print(Weights1)       
-        return train_accuracy, test_accuracy, weights, bias, costs
+        return train_accuracy, weights, bias, costs
 
 
 def generate_min_batch(X_train, Y_train, seed, minbatch_size):
@@ -200,6 +204,7 @@ def generate_min_batch(X_train, Y_train, seed, minbatch_size):
 
 from datetime import datetime
 start=datetime.now()
-train_accuracy, test_accuracy, weights, bias, costs = model(train_x_norm1, train_y_encode, test_x_norm1, test_y_encode, 20)
+# train_accuracy, test_accuracy, weights, bias, costs = model(train_x_norm1, train_y_encode, test_x_norm1, test_y_encode, 20)
+train_accuracy, test_accuracy, weights, bias, costs = model(train_x_norm1, train_y_encode, 43)
 end = datetime.now() - start
 

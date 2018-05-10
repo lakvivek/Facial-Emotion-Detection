@@ -5,7 +5,7 @@ recognizer = cv2.face.LBPHFaceRecognizer_create()
 # recognizer.read('/home/sureshvairamuthu/Facial-Emotion-Detection/faceRecognizer/faceTrainer/faceTrainer.yml')
 recognizer.read('../../data/faceRecognizerData/faceTrainer/faceTrainer.yml')
 # haar_face_cascade = cv2.CascadeClassifier('../venv/lib/python3.5/site-packages/cv2/data/haarcascade_frontalface_default.xml')
-haar_face_cascade = cv2.CascadeClassifier('../../venv/lib/python3.6/site-packages/cv2/data/haarcascade_frontalface_default.xml')
+haar_face_cascade = cv2.CascadeClassifier('../../data/haarcascade_frontalface_default.xml')
 
 
 cam = cv2.VideoCapture(0)
