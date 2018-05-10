@@ -120,8 +120,9 @@ def add_header(r):
 
 @app.route('/emotion')
 def emotion():
-    pred, emotions = detectEmotion('./static/emotion.jpg')
-    emotion="happy"
+    pred = detectEmotion('./static/emotion.jpg')
+
+    emotion="None"
     print("pred value", pred, type(pred))
     if(pred == 0):
         print("The emotion is neutral and the person feels normal")
@@ -150,16 +151,19 @@ def emotion():
 
     if(pred == 1  or pred ==2 or pred == 3 or pred == 6):
         detection = "sad"
-    else:
+    elif(pred==0 or pred==4 or pred==5 or pred==7):
         detection = "happy"
-    print("emotions", emotions)
-    print("emotion", emotion, detection)
+    else:
+        detection = "Neutral"
+        pred = "None"
     return render_template('predict.html', output=pred, detection=detection)
 
 
 @app.route('/play')
 def play():
     song = request.args.get('song')
+    if song == "Neutral":
+        return "Emotion is Neutral, I cannot play any song!!!"
     play_music(song)
     return render_template('emotionRecog.html')
 

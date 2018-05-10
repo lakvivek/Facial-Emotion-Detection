@@ -35,6 +35,9 @@ def detectEmotion(filename):
 	gray=cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 	faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=2.2);
+	if faces is None:
+		print("Exiting in here")
+		return
 	for(x,y,w,h) in faces:
 	    cv2.rectangle(img,(x,y),(x+w,y+h),(225,0,0),2)
 	    gray_box = gray[y:y+h,x:x+w]
@@ -48,4 +51,5 @@ def detectEmotion(filename):
 	    	return pred
 	    else:
         	print("Image size is small")
+        	return
 
