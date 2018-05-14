@@ -112,7 +112,8 @@ def predict_model(restored_ws, restored_bs, test_x):
 
         test_x_norm = norm_calc(x)
         A6 = frwd_propagation(test_x_norm, restored_ws, restored_bs)
-        soft = tf.nn.softmax(A6)
+        # soft = tf.nn.softmax(A6)
+        soft = A6
 
 
     with tf.Session(graph=graph) as sess:
@@ -120,8 +121,10 @@ def predict_model(restored_ws, restored_bs, test_x):
         pred = tf.argmax(soft, 1)
         prediction = pred.eval({x: test_x})
         print(prediction)
-        print(soft.eval({x: test_x}))
+        emotions = soft.eval({x: test_x}).tolist()
+        print(emotions)
+
         # emotions_levels = soft.eval({x: test_x})
         
     # return prediction, emotions_levels.tolist()
-    return prediction
+    return prediction, emotions

@@ -45,10 +45,10 @@ def detectEmotion(filename):
 	    if gray_box.shape[0] == 256 and gray_box.shape[1] == 256:
 	    	start = datetime.now()
 	    	arr = processInput(gray_box)
-	    	pred = predict_model(W_Rs, B_Rs, arr)
+	    	pred, emotions = predict_model(W_Rs, B_Rs, arr)
 	    	# print("prediction is %s "%pred)
 	    	print(datetime.now() - start)
-	    	return pred
+	    	return pred, emotions
 	    else:
         	print("Image size is small")
         	return

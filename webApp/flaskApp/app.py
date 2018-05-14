@@ -38,7 +38,7 @@ def play_music(detection, volume=0.8):
     pg.mixer.init(freq, bitsize, channels, buffer)
     pg.mixer.music.set_volume(volume)
 
-    if detection =="sad":
+    if True:
         print("The person is not happy")
         song = random.randint(1,10)
         try:
@@ -86,10 +86,15 @@ def faceGen():
         faces = haar_face_cascade.detectMultiScale(gray, scaleFactor=1.2);
         for(x,y,w,h) in faces:
             cv2.rectangle(im,(x,y),(x+w,y+h),(225,0,0),2)
-            #print(gray[y:y+h,x:x+w].shape)
+            # print(gray[y:y+h,x:x+w].shape)
+            shapeX = gray[y:y+h,x:x+w].shape[0]
+            shapeY = gray[y:y+h,x:x+w].shape[1]
+            if int(shapeX) > 200:
+                cv2.putText(im, "%s x %s " %(shapeX, shapeY), (x+w, y+h), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 255, 0), 2)
+
             #print(gray[y:y+h,x:x+w])
             Id, conf = recognizer.predict(gray[y:y+h,x:x+w])
-            print("Conf=", conf)
+            # print("Conf=", conf)
             profile = getProfile(Id)
             if(profile != None):
                 if(conf < 50.00):
@@ -120,7 +125,11 @@ def add_header(r):
 
 @app.route('/emotion')
 def emotion():
-    pred = detectEmotion('./static/emotion.jpg')
+    emotions = []
+    pred, emotions = detectEmotion('./static/emotion.jpg')
+    if emotions is not None:
+        print(emotions)
+
 
     emotion="None"
     print("pred value", pred, type(pred))
@@ -156,7 +165,7 @@ def emotion():
     else:
         detection = "Neutral"
         pred = "None"
-    return render_template('predict.html', output=pred, detection=detection)
+    return render_template('predict.html', output=emotion, detection=detection, emotions = emotions)
 
 
 @app.route('/play')
@@ -165,7 +174,9 @@ def play():
     if song == "Neutral":
         return "Emotion is Neutral, I cannot play any song!!!"
     play_music(song)
-    return render_template('emotionRecog.html')
+    # return render_template('emotionRecog.html')
+    return ('', 204)
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -185,4 +196,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run()
